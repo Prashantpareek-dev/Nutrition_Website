@@ -48,6 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     locoScroll.update();
+
+    // Re-calculate height after all images/fonts have loaded
+    window.addEventListener('load', () => locoScroll.update());
   }
 
   /* ------------------------------------------------
