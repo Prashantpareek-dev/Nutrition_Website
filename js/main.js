@@ -234,4 +234,63 @@ document.addEventListener('DOMContentLoaded', () => {
   animateIn(heroText, 120);
   animateIn(heroImg, 300);
 
+  /* ------------------------------------------------
+     9. PAGE TRANSITION
+  ------------------------------------------------ */
+  const overlay = document.getElementById('pageTransition');
+
+  // Fade out the overlay when this page has loaded
+  if (overlay) {
+    // Short rAF ensures paint has happened before removing the overlay
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        overlay.classList.add('ready');
+      });
+    });
+  }
+
+  // Intercept every internal same-origin link click
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href]');
+    if (!link) return;
+
+    const href = link.getAttribute('href');
+
+    // Skip: external, anchor-only, mailto/tel, new-tab, or JS links
+    if (
+      !href ||
+      href.startsWith('http') ||
+      href.startsWith('//') ||
+      href.startsWith('#') ||
+      href.startsWith('mailto:') ||
+      href.startsWith('tel:') ||
+      link.target === '_blank' ||
+      link.hasAttribute('download') ||
+      e.ctrlKey || e.metaKey || e.shiftKey
+    ) return;
+
+    e.preventDefault();
+
+    if (!overlay) {
+      window.location.href = href;
+      return;
+    }
+
+    // Restart bar animation by cloning the fill element
+    const fill = overlay.querySelector('.pt-bar-fill');
+    if (fill) {
+      const clone = fill.cloneNode(true);
+      fill.parentNode.replaceChild(clone, fill);
+    }
+
+    // Show overlay
+    overlay.classList.remove('ready');
+    overlay.classList.add('leaving');
+
+    // Navigate after the transition completes
+    setTimeout(() => {
+      window.location.href = href;
+    }, 520);
+  });
+
 });
