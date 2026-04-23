@@ -135,8 +135,8 @@ p {
   padding: 0 24px;
 }
 
-.section       { padding: 100px 0; }
-.section-sm    { padding:  64px 0; }
+.section       { padding: 100px 0; content-visibility: auto; contain-intrinsic-size: auto 600px; }
+.section-sm    { padding:  64px 0; content-visibility: auto; contain-intrinsic-size: auto 400px; }
 
 .section-white { background: var(--white); }
 .section-alt   { background: var(--off-white); }
@@ -387,7 +387,7 @@ p {
   content: '';
   position: absolute;
   inset: 0;
-  background: url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1920&q=60') center/cover no-repeat;
+  background: url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1400&q=40&fm=webp') center/cover no-repeat;
   opacity: 0.12;
   mix-blend-mode: luminosity;
 }
@@ -398,6 +398,7 @@ p {
   border-radius: 50%;
   background: rgba(255,255,255,0.06);
   z-index: 0;
+  will-change: transform;
 }
 .hero-blob-1 { width: 700px; height: 700px; top: -280px; right: -150px; animation: blobFloat 10s ease-in-out infinite; }
 .hero-blob-2 { width: 420px; height: 420px; bottom: -180px; left: -80px;  animation: blobFloat 13s ease-in-out infinite reverse; }
@@ -490,6 +491,7 @@ p {
   align-items: center;
   gap: 12px;
   animation: cardFloat 4s ease-in-out infinite;
+  will-change: transform;
 }
 .hero-float-card:nth-child(2) { animation-delay: 2s; animation-direction: reverse; }
 
@@ -1770,7 +1772,7 @@ textarea.form-control { resize: vertical; min-height: 128px; }
 }
 
 @media (max-width: 640px) {
-  .section { padding: 64px 0; }
+  .section { padding: 64px 0; contain-intrinsic-size: auto 500px; }
 
   .services-grid,
   .about-values-grid,
@@ -1862,4 +1864,16 @@ textarea.form-control { resize: vertical; min-height: 128px; }
 @keyframes ptProgress {
   0%   { width: 0%;   }
   100% { width: 100%; }
+}
+/* -----------------------------------------------
+   REDUCED MOTION (accessibility + low-power perf)
+----------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .fade-up { opacity: 1 !important; transform: none !important; }
 }

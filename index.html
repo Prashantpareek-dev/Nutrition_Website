@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -15,10 +15,15 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" />
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+  <link rel="dns-prefetch" href="https://images.unsplash.com" />
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" /></noscript>
   <!-- Stylesheet -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css" />
   <link rel="stylesheet" href="css/style.css" />
 
   <!-- Schema Markup -->
@@ -83,6 +88,7 @@
   <!-- ===== END HEADER ===== -->
 
 
+  <div id="loco-container" data-scroll-container>
   <main>
 
     <!-- =============================================
@@ -145,6 +151,8 @@
                 src="https://Images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80"
                 alt="Nutritious and colorful healthy meal on a table"
                 loading="eager"
+                fetchpriority="high"
+                decoding="sync"
                 width="800" height="540"
               />
             </div>
@@ -217,7 +225,7 @@
             <img
               src="https://Images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=800&q=80"
               alt="Person looking confused about complex diet plans and nutrition advice"
-              loading="lazy"
+              loading="lazy" decoding="async"
               width="800" height="480"
             />
           </div>
@@ -311,7 +319,7 @@
             <img
               src="https://Images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80"
               alt="Healthy and balanced meal preparation with fresh vegetables"
-              loading="lazy"
+              loading="lazy" decoding="async"
               width="800" height="520"
             />
           </div>
@@ -448,7 +456,7 @@
             <img
               src="https://Images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=800&q=80"
               alt="Person enjoying a healthy balanced meal with fresh vegetables and fruits"
-              loading="lazy"
+              loading="lazy" decoding="async"
               width="800" height="520"
             />
             <div class="benefits-badge-card" aria-hidden="true">
@@ -707,10 +715,12 @@
   <!-- ===== END FOOTER ===== -->
 
   <!-- Scroll-to-Top -->
+  </div><!-- /#loco-container -->
   <button class="scroll-top" id="scrollTop" aria-label="Scroll back to top">
     <i class="fas fa-arrow-up" aria-hidden="true"></i>
   </button>
 
-  <script src="js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js" defer></script>
+  <script src="js/main.js" defer></script>
 </body>
 </html>

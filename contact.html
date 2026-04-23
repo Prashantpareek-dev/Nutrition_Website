@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -14,8 +14,13 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+  <link rel="dns-prefetch" href="https://Images.unsplash.com" />
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" /></noscript>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.css" />
   <link rel="stylesheet" href="css/style.css" />
 
   <script type="application/ld+json">
@@ -45,7 +50,7 @@
 <body>
   <!-- PAGE TRANSITION OVERLAY -->
   <div id="pageTransition" role="status" aria-label="Loading">
-    <img src="./image/logo.png" alt="SS Herbal India" class="pt-logo" />
+    <img src="./Image/logo.png" alt="SS Herbal India" class="pt-logo" />
     <div class="pt-bar"><div class="pt-bar-fill"></div></div>
   </div>
 
@@ -54,7 +59,7 @@
     <div class="container">
       <nav class="nav" aria-label="Main navigation">
         <a href="index.html" class="nav-logo">
-          <img src="./image/logo.png" alt="SS Herbal India" class="logo-img" />
+          <img src="./Image/logo.png" alt="SS Herbal India" class="logo-img" />
         </a>
         <ul class="nav-links">
           <li><a href="index.html">Home</a></li>
@@ -85,6 +90,7 @@
     </div>
   </header>
 
+  <div id="loco-container" data-scroll-container>
   <main>
 
     <!-- PAGE HERO -->
@@ -393,7 +399,7 @@
       <div class="footer-top">
         <div class="footer-brand">
           <div class="f-logo">
-            <img src="./image/logo.png" alt="SS Herbal India" class="logo-img" />
+            <img src="./Image/logo.png" alt="SS Herbal India" class="logo-img" />
           </div>
           <p>Professional nutrition consultation focused on personalized diet planning and sustainable lifestyle habits.</p>
           <div class="f-socials">
@@ -442,9 +448,11 @@
     </div>
   </footer>
 
+  </div><!-- /#loco-container -->
   <button class="scroll-top" id="scrollTop" aria-label="Scroll back to top">
     <i class="fas fa-arrow-up" aria-hidden="true"></i>
   </button>
-  <script src="js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js" defer></script>
+  <script src="js/main.js" defer></script>
 </body>
 </html>

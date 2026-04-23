@@ -3,7 +3,52 @@
    ============================================== */
 'use strict';
 
+let locoScroll = null; // Locomotive Scroll instance
+
 document.addEventListener('DOMContentLoaded', () => {
+
+  /* ------------------------------------------------
+     0. LOCOMOTIVE SCROLL – Smooth Scrolling
+  ------------------------------------------------ */
+  const scrollContainer = document.querySelector('[data-scroll-container]');
+
+  if (scrollContainer && typeof LocomotiveScroll !== 'undefined') {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    locoScroll = new LocomotiveScroll({
+      el: scrollContainer,
+      smooth: !prefersReducedMotion,
+      multiplier: 1,
+      lerp: 0.08,
+      tablet: { smooth: true, breakpoint: 1024 },
+      smartphone: { smooth: false },
+    });
+
+    // Delegate fade-up animations to Locomotive's viewport tracker
+    scrollContainer.querySelectorAll('.fade-up').forEach(el => {
+      el.setAttribute('data-scroll', '');
+      el.setAttribute('data-scroll-class', 'in-view');
+      el.setAttribute('data-scroll-offset', '10%, 0');
+    });
+
+    // Trigger counter animation via Locomotive's call event
+    scrollContainer.querySelectorAll('[data-count]').forEach(el => {
+      el.setAttribute('data-scroll', '');
+      el.setAttribute('data-scroll-call', 'countUp');
+      el.setAttribute('data-scroll-offset', '30%, 0');
+    });
+
+    locoScroll.on('call', (func, way, obj) => {
+      if (func === 'countUp' && way === 'enter') {
+        const el = obj.el;
+        if (el.dataset.counted) return;
+        el.dataset.counted = 'true';
+        animateCounter(el);
+      }
+    });
+
+    locoScroll.update();
+  }
 
   /* ------------------------------------------------
      1. STICKY HEADER + SCROLL-TO-TOP
@@ -11,21 +56,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const header    = document.querySelector('.header');
   const scrollBtn = document.querySelector('.scroll-top');
 
-  window.addEventListener('scroll', () => {
-    const y = window.scrollY;
+  const updateScrollUI = (y) => {
+    if (header)    header.classList.toggle('scrolled', y > 60);
+    if (scrollBtn) scrollBtn.classList.toggle('visible', y > 420);
+  };
 
-    if (header) {
-      header.classList.toggle('scrolled', y > 60);
-    }
-
-    if (scrollBtn) {
-      scrollBtn.classList.toggle('visible', y > 420);
-    }
-  }, { passive: true });
+  if (locoScroll) {
+    locoScroll.on('scroll', ({ scroll }) => updateScrollUI(scroll.y));
+  } else {
+    window.addEventListener('scroll', () => updateScrollUI(window.scrollY), { passive: true });
+  }
 
   if (scrollBtn) {
     scrollBtn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (locoScroll) locoScroll.scrollTo(0);
+      else window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 
@@ -73,11 +118,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ------------------------------------------------
-     4. SCROLL ANIMATION – Intersection Observer
+     4. SCROLL ANIMATION – IO fallback (Locomotive handles it when active)
   ------------------------------------------------ */
   const fadeEls = document.querySelectorAll('.fade-up');
 
-  if (fadeEls.length > 0) {
+  if (!locoScroll && fadeEls.length > 0) {
     const io = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -91,36 +136,40 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ------------------------------------------------
-     5. ANIMATED COUNTER (data-count attribute)
+     5. ANIMATED COUNTER – IO fallback (Locomotive handles it when active)
   ------------------------------------------------ */
   const counters = document.querySelectorAll('[data-count]');
 
-  if (counters.length > 0) {
+  if (!locoScroll && counters.length > 0) {
     const cio = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
-
-        const el      = entry.target;
-        const target  = parseInt(el.getAttribute('data-count'), 10);
-        const suffix  = el.getAttribute('data-suffix') || '';
-        const dur     = 1400; // ms
-        const start   = performance.now();
-
-        const tick = (now) => {
-          const elapsed = now - start;
-          const progress = Math.min(elapsed / dur, 1);
-          // Ease-out cubic
-          const eased = 1 - Math.pow(1 - progress, 3);
-          el.textContent = Math.round(eased * target) + suffix;
-          if (progress < 1) requestAnimationFrame(tick);
-        };
-
-        requestAnimationFrame(tick);
-        cio.unobserve(el);
+        animateCounter(entry.target);
+        cio.unobserve(entry.target);
       });
     }, { threshold: 0.6 });
 
     counters.forEach(c => cio.observe(c));
+  }
+
+  /* ------------------------------------------------
+     HELPER: Counter animation (shared by section 0 & 5)
+  ------------------------------------------------ */
+  function animateCounter(el) {
+    const target = parseInt(el.getAttribute('data-count'), 10);
+    const suffix = el.getAttribute('data-suffix') || '';
+    const dur    = 1400; // ms
+    const start  = performance.now();
+
+    const tick = (now) => {
+      const elapsed  = now - start;
+      const progress = Math.min(elapsed / dur, 1);
+      const eased    = 1 - Math.pow(1 - progress, 3); // Ease-out cubic
+      el.textContent = Math.round(eased * target) + suffix;
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+
+    requestAnimationFrame(tick);
   }
 
   /* ------------------------------------------------
@@ -218,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
      8. HERO ENTRANCE ANIMATION
   ------------------------------------------------ */
   const heroText = document.querySelector('.hero-text');
-  const heroImg  = document.querySelector('.hero-image-wrap');
+  const heroImg  = document.querySelector('.hero-Image-wrap');
 
   const animateIn = (el, delay = 0) => {
     if (!el) return;
